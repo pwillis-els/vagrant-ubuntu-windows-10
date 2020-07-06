@@ -1,26 +1,48 @@
 # Setting up an Ubuntu VM with Vagrant on Windows 10
 
+Table of Contents
+=================
+
+* [Setting up an Ubuntu VM with Vagrant on Windows 10](#setting-up-an-ubuntu-vm-with-vagrant-on-windows-10)
+  * [Set up an Ubuntu VM](#set-up-an-ubuntu-vm)
+    * [1\. Install VirtualBox](#1-install-virtualbox)
+    * [2\. Install Vagrant](#2-install-vagrant)
+    * [3\. (optional) Install Git for Windows](#3-optional-install-git-for-windows)
+    * [4\. Create the Vagrant box](#4-create-the-vagrant-box)
+    * [Troubleshooting](#troubleshooting)
+  * [Login to your Vagrant machine](#login-to-your-vagrant-machine)
+  * [Create a new SSH key](#create-a-new-ssh-key)
+  * [Set up GitHub Access](#set-up-github-access)
+  * [Extras](#extras)
+* [Table of Contents](#table-of-contents)
+
+
 ## Set up an Ubuntu VM
 
-1. Install VirtualBox (https://www.virtualbox.org/wiki/Downloads)
-   - Download and install the latest version of VirtualBox **6.0** (as of this writing, [version 6.0.22](https://download.virtualbox.org/virtualbox/6.0.22/VirtualBox-VirtualBox-6.0.22-137980-Win.exe)
-     - **Do not use VirtualBox 6.1.** It causes networking issues, and it requires Intel VT-x/AMD-v to be enabled. Even if VT-x is enabled, if Hyper-v is also enabled, VirtualBox will not be able to use it. (https://forums.virtualbox.org/viewtopic.php?f=1&t=62339 https://github.com/kubernetes/minikube/issues/4587)
-   - Follow the install and use all the defaults.
-   - After install, open the VirtualBox GUI
-   - Go to menu *File -> Preferences*
-   - In the *General* tab, look for the *Default Machine Folder* setting.
-     Set it to `C:\files\VirtualBox VMs`.
-     This will avoid your VM being created in your user's home directory, which could cause issues later.
-   - Now click *Extensions*.
-   - Make sure there is no Oracle VirtualBox Extension Pack listed.  If there is, select it, and click the "X" button to the right to uninstall it.
-     The license for this Extension Pack is not free for commercial uses, and you don't need it for a basic headless Linux VM.
+### 1. Install VirtualBox
+ - Download and install the latest version of VirtualBox **6.0** (as of this writing, [version 6.0.22](https://download.virtualbox.org/virtualbox/6.0.22/VirtualBox-VirtualBox-6.0.22-137980-Win.exe))
+   - **Do not use VirtualBox 6.1.** It causes networking issues, and it requires Intel VT-x/AMD-v to be enabled. Even if VT-x is enabled, if Hyper-v is also enabled, VirtualBox will not be able to use it. (https://forums.virtualbox.org/viewtopic.php?f=1&t=62339 https://github.com/kubernetes/minikube/issues/4587)
+ - Follow the install and use all the defaults.
+ - After install, open the VirtualBox GUI
+ - Go to menu *File -> Preferences*
+ - In the *General* tab, look for the *Default Machine Folder* setting.
+   Set it to `C:\files\VirtualBox VMs`.
+   This will avoid your VM being created in your user's home directory, which could cause issues later.
+ - Now click *Extensions*.
+ - Make sure there is no Oracle VirtualBox Extension Pack listed.  If there is, select it, and click the "X" button to the right to uninstall it.
+   The license for this Extension Pack is not free for commercial uses, and you don't need it for a basic headless Linux VM.
 
-2. Install Vagrant (https://www.vagrantup.com/downloads.html)
-   - Download and install the latest version of Vagrant for Windows (as of this writing, [version 2.2.9](https://releases.hashicorp.com/vagrant/2.2.9/vagrant_2.2.9_x86_64.msi)
+### 2. Install Vagrant
+ - Download and install the latest version of Vagrant for Windows (as of this writing, [version 2.2.9](https://releases.hashicorp.com/vagrant/2.2.9/vagrant_2.2.9_x86_64.msi))
 
-3. Open a command-line window (cmd.exe)
+### 3. (optional) Install Git for Windows
+ - Download at https://gitforwindows.org/
+ - This is only used to download the files in this Git repo.
+   You can skip this step if you download each file in this repo and put them in the `devbox` folder shown in the next step.
+   However, using Git will allow you to `git pull` any updates to this repo in the future.
 
-4. Run the following commands:
+### 4. Create the Vagrant box
+ - Open a command-line window (`cmd.exe`) and run the following commands:
    ```
    C:\Users\willis> mkdir c:\files\vagrant\devbox
    C:\Users\willis> cd c:\files\vagrant
@@ -28,17 +50,21 @@
    C:\files\vagrant> cd devbox
    C:\files\vagrant\devbox> .\vagrant_up.bat
    ```
+   The `vagrant_up.bat` file sets the location of your *VAGRANT_HOME* directory to `C:\files\vagrant`. Otherwise it would be created in your user's profile directory, which could cause problems later. If you're going to run more `vagrant` commands, first set the variable in your console as shown in `vagrant_up.bat`.
+
 Vagrant will now create and provision your new Vagrant box. (this will take some time)
 
 ### Troubleshooting
- - If `vagrant_up.bat` fails, edit the file to add ` --debug` after `vagrant up`, to find out more information about the failure.
+ - If `vagrant_up.bat` fails:
+   1. Edit the file to add ` --debug` after `vagrant up`
+   2. Run `vagrant_up.bat` again, which should provide more information about why it failed.
 
  - If you get the following error:
    ```
    Stderr: VBoxManage.exe: error: Call to WHvSetupPartition failed: ERROR_SUCCESS (Last=0xc000000d/87) (VERR_NEM_VM_CREATE_FAILED)
    VBoxManage.exe: error: Details: code E_FAIL (0x80004005), component ConsoleWrap, interface IConsole
    ```
-   It means VirtualBox is trying to use Hyper-V and failing. You should turn off HyperV and reboot.
+   It may mean VirtualBox is trying to use Hyper-V and failing. You should turn off HyperV and reboot.
    1. Open a new `cmd.exe` console *with Administrator privileges*.
    2. Run the command `bcdedit /set hypervisorlaunchtype off`
    3. Reboot
@@ -100,4 +126,3 @@ However, it is more secure to have a password-protected key that lives only in y
      ```
 
 [1]: https://askubuntu.com/questions/41605/trouble-downloading-packages-list-due-to-a-hash-sum-mismatch-error/
-
