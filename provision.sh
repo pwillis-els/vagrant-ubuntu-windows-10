@@ -31,7 +31,8 @@ apt-get install --fix-missing -y \
     sendmail \
     bsd-mailx \
     jq \
-    ntp
+    ntp \
+    ntpdate
 
 # If you need to modify your DNS servers, you may need the following configuration:
 # 1. Create this file
