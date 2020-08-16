@@ -1,18 +1,6 @@
 Setting up an Ubuntu VM with Vagrant on Windows 10
 =================
 
-* [Set up an Ubuntu VM](#set-up-an-ubuntu-vm)
-  * [1\. Install VirtualBox](#1-install-virtualbox)
-  * [2\. Install Vagrant](#2-install-vagrant)
-  * [3\. (optional) Install Git for Windows](#3-optional-install-git-for-windows)
-  * [4\. Create the Vagrant box](#4-create-the-vagrant-box)
-  * [Troubleshooting](#troubleshooting)
-* [Login to your Vagrant machine](#login-to-your-vagrant-machine)
-* [Create a new SSH key](#create-a-new-ssh-key)
-* [Set up GitHub Access](#set-up-github-access)
-* [Extras](#extras)
-
-
 ## Set up an Ubuntu VM
 
 ### 1. Install VirtualBox
