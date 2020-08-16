@@ -64,26 +64,65 @@ Vagrant will now create and provision your new Vagrant box. (this will take some
    1. Open a new `cmd.exe` console *with Administrator privileges*.
    2. Run the command `bcdedit /set hypervisorlaunchtype off`
    3. Reboot
-
- - Try opening VirtualBox GUI, going to Preferences, Networking, and make sure there is at least one "NAT" network.
+   
+ - Try opening the *Oracle VM VirtualBox* Windows app, going to Preferences -> Networking, and make sure there is at least one "NAT" network.
 
  - If you have networking issues getting your Vagrant box up, try turning off any anti-virus software, or anything else that might mess with your network connection.
 
 
 ## Login to your Vagrant machine
-1. To SSH in from the Windows console, just run the `vagrant_ssh.bat` script.
-   It will change to the correct directory and run `vagrant ssh` for you.
-2. You can also get the ssh connection information with command `vagrant ssh-config`, convert the IdentityFile to a PuTTY .ppk file, and use PuTTY to log in. With PuTTY you can also forward the X11 connection to run graphical apps.
 
+To SSH in from the Windows console, just run the `vagrant_ssh.bat` script. It will change to the correct directory and run `vagrant ssh` for you.
 
-## Create a new SSH key
-Vagrant creates an SSH key for you, whose path you can retrieve with the `vagrant ssh-config` command.
-However, it is more secure to have a password-protected key that lives only in your Vagrant box.
-1. Login to the Vagrant machine (see above)
-2. Run the following command and follow the prompts
-   ```bash
-   $ ssh-keygen -o -t ed25519
+You can also get the ssh connection information with command `vagrant ssh-config`, convert the IdentityFile to a PuTTY .ppk file, and use this file as the private key to log in to the Vagrant machine.
+
+With PuTTY you can also forward the X11 connection, which when combined with a windows X11 server, enables you to run graphical apps and display them natively in Windows.
+
+### Use a new SSH key to connect to the Vagrant guest
+
+Vagrant automatically creates an SSH key for you to connect to your Vagrant guest.
+You can get the path to this IdentityFile with the `vagrant ssh-config` command.
+However, it is more secure to have your own password-protected key.
+
+#### 1. Create a new key if you don't already have one
+
+If you don't already have an SSH key to use, you can generate one with the `PuTTYgen.exe` program.
+You can also run the command `ssh-keygen -o -t ed25519` on the Vagrant machine itself, which will create a new SSH private and public key.
+
+You will need to copy the private key (`/home/vagrant/.ssh/id_ed25519`) to your host machine for your SSH client to use.
+If you are using PuTTY, you will need to convert this key into a PuTTY `.ppk` file, using the `PuTTYgen.exe` program.
+
+#### 2. Add the new public key to the Vagrant user's authorized_keys
+
+Login to the Vagrant machine.
+There should be a file `/home/vagrant/.ssh/authorized_keys`, which Vagrant creates to allow its default SSH key to login to this machine.
+
+Open up this file with a console text editor (`vi`, `nano`, etc), remove the existing line, and replace it with your own SSH public key.
+Now you can only login with the SSH key that you have created.
+
+#### 3. Replacing the Vagrant SSH key with your own
+
+Vagrant may try to use the SSH connection to do some work on the guest, such as guest provisioning.
+Therefore you may need to replace the IdentityFile that Vagrant has configured with your newly-created one.
+
+Just run `vagrant ssh-config` (see above) and copy your SSH private key over the file listed.
+If your SSH private key is a PuTTY `.ppk` file, you'll need to convert it into PEM format first (using `PuTTYgen.exe`).
+
+### Troubleshooting
+ - Sometimes the SSH settings may change, like the port on your local host that is forwarded to the guest SSH port. From a Windows command-line, run the following commands:
    ```
+   C:\Users\willis> SETLOCAL
+   C:\Users\willis> SET VAGRANT_HOME=C:\files\vagrant
+   C:\Users\willis> PUSHD C:\files\vagrant\devbox
+   C:\files\vagrant\devbox>vagrant ssh-config
+   ```
+   
+   Verify that the HostName, User, and Port options in your SSH client match what is on the screen.
+   
+   If you still have trouble logging in with PuTTY, you may need to convert the IdentityFile to a PuTTY .ppk file again in case the file changed.
+
+
+
 
 ## Set up GitHub Access
 1. Navigate to [Add new SSH key](https://github.com/settings/ssh/new)
