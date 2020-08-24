@@ -56,6 +56,8 @@ Vagrant will now create and provision your new Vagrant box. (this will take some
  - Try opening the *Oracle VM VirtualBox* Windows app, going to Preferences -> Networking, and make sure there is at least one "NAT" network.
 
  - If you have networking issues getting your Vagrant box up, try turning off any anti-virus software, or anything else that might mess with your network connection.
+ 
+ - If you get a warning about the *VirtualBox Guest Additions* being out of date, use the following guide to update your guest's Guest Additions: https://linuxize.com/post/how-to-install-virtualbox-guest-additions-in-ubuntu/ (note: you may need to first add a CDROM device to one of the existing storage devices)
 
 
 ## Login to your Vagrant machine
