@@ -8,6 +8,15 @@ export DEBIAN_FRONTEND=noninteractive
 apt-get clean
 rm -rf /var/lib/apt/lists/*
 
+#cat > /etc/apt/apt.conf.d/docker-ignore-secure.conf <<EOFILE
+#Acquire::https::download.docker.com::Verify-Peer "false";
+#Acquire::https::download.docker.com::Verify-Host "false";
+#EOFILE
+
+curl -k -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+apt-key fingerprint 0EBFCD88
+
+# --allow-unauthenticated 
 apt-get update --fix-missing -y
 
 # Upgrade all packages to the latest, and resolve dependencies
@@ -52,7 +61,7 @@ sudo timedatectl set-timezone US/Eastern
 (
     # Don't fail for the docker install
     set +e
-    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+    curl -k -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
     apt-key fingerprint 0EBFCD88
     add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
     apt-get update
@@ -62,3 +71,4 @@ sudo timedatectl set-timezone US/Eastern
     usermod -a -G docker vagrant
 ) || true
 
+rm -f /etc/apt/apt.conf.d/docker-ignore-secure.conf
